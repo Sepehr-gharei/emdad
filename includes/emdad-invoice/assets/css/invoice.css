@@ -1,0 +1,759 @@
+/* ───────────────────────────────────────────
+   فونت‌ها
+─────────────────────────────────────────── */
+@font-face{font-family:PeydaWebFaNum;font-style:normal;font-weight:bold;src:url('../fonts/PeydaWebFaNum-Bold.woff2') format('woff2'),url('../fonts/PeydaWebFaNum-Bold.woff') format('woff');}
+@font-face{font-family:PeydaWebFaNum;font-style:normal;font-weight:normal;src:url('../fonts/PeydaWebFaNum-Regular.woff2') format('woff2'),url('../fonts/PeydaWebFaNum-Regular.woff') format('woff');}
+@font-face{font-family:"B Nazanin";src:url('../fonts/BNazanin.woff2') format('woff2'),url('../fonts/BNazanin.woff') format('woff');font-weight:400;}
+@font-face{font-family:"B Nazanin";src:url('../fonts/BNaznnBd.woff2') format('woff2'),url('../fonts/BNaznnBd.woff') format('woff');font-weight:700;}
+
+/* ───────────────────────────────────────────
+   متغیرها - تم سایت
+─────────────────────────────────────────── */
+:root {
+  --primary:       #e41522;
+  --primary-light: #f15a5a;
+  --primary-dark:  #a5111b;
+  --primary-soft:  rgba(228,21,34,.08);
+  --primary-soft2: rgba(228,21,34,.15);
+  --bg:            #f5f5f7;
+  --bg2:           #f9f9f9;
+  --white:         #fff;
+  --text:          #111;
+  --text-muted:    #666;
+  --border:        #e8e8e8;
+  --green:         #22c55e;
+  --green-soft:    rgba(34,197,94,.1);
+  --red:           #ef4444;
+  --yellow:        #f59e0b;
+  --radius:        14px;
+  --radius-sm:     8px;
+  --shadow:        0 4px 24px rgba(0,0,0,.08);
+  --shadow-sm:     0 2px 10px rgba(0,0,0,.06);
+}
+
+/* ───────────────────────────────────────────
+   ریست
+─────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  -webkit-font-smoothing: antialiased;
+  font-family: PeydaWebFaNum, Tahoma, Arial, sans-serif;
+  line-height: 1.6;
+  direction: rtl;
+  text-align: right;
+  background: var(--bg);
+  color: var(--text);
+}
+img,picture,svg{display:block;max-width:100%;}
+input,button,textarea,select{font:inherit;border:none;background:none;}
+button{cursor:pointer;}
+a{transition:all .3s ease;text-decoration:none;color:inherit;}
+ul,ol{list-style:none;}
+table{border-collapse:collapse;border-spacing:0;}
+
+/* ───────────────────────────────────────────
+   نوار پرداخت بالا
+─────────────────────────────────────────── */
+.emdad-pay-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 0;
+  box-shadow: 0 2px 16px rgba(228,21,34,.35);
+}
+.emdad-pay-bar.paid {
+  background: var(--green);
+  box-shadow: 0 2px 16px rgba(34,197,94,.3);
+}
+.pay-bar-inner {
+  max-width: 980px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; gap: 16px; flex-wrap: wrap;
+}
+.pay-bar-label  { font-size: 14px; opacity: .9; }
+.pay-bar-amount { font-size: 22px; font-weight: 800; margin-right: 8px; }
+.pay-bar-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--primary);
+  padding: 9px 26px; border-radius: 50px;
+  font-size: 14px; font-weight: 800;
+  box-shadow: 0 4px 14px rgba(0,0,0,.15);
+  transition: transform .2s, box-shadow .2s;
+}
+.pay-bar-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+
+/* ───────────────────────────────────────────
+   کانتینر اصلی
+─────────────────────────────────────────── */
+.emdad-invoice-wrap { padding: 28px 16px 60px; }
+.emdad-invoice-container {
+  max-width: 980px; margin: 0 auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* ───────────────────────────────────────────
+   نوار رنگی بالای فاکتور
+─────────────────────────────────────────── */
+.invoice-top-bar {
+  height: 5px;
+  background: linear-gradient(to left, var(--primary-dark), var(--primary), var(--primary-light));
+}
+
+/* ───────────────────────────────────────────
+   هدر
+─────────────────────────────────────────── */
+.invoice-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 32px 32px 24px;
+  background: var(--white);
+}
+
+/* ستون راست - اطلاعات شرکت */
+.header-right { display: flex; flex-direction: column; gap: 12px; }
+.company-logo img { max-height: 65px; max-width: 150px; object-fit: contain; }
+.company-details h2 {
+  font-size: 17px; color: var(--text); font-weight: 800;
+  margin-bottom: 6px;
+}
+.company-details p { font-size: 12.5px; color: var(--text-muted); margin: 3px 0; display: flex; align-items: center; gap: 5px; }
+
+/* ستون مرکزی */
+.header-center { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.invoice-type-title {
+  font-size: 22px; font-weight: 800; color: var(--text);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.invoice-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.badge {
+  display: inline-block; padding: 4px 18px; border-radius: 50px;
+  color: #fff; font-size: 12.5px; font-weight: 700;
+}
+.badge-num { background: var(--text); }
+.invoice-dates {
+  font-size: 13px; color: var(--text-muted); line-height: 1.9;
+  background: var(--bg2); border-radius: var(--radius-sm);
+  padding: 10px 18px; border: 1px solid var(--border);
+}
+.invoice-dates div { display: flex; gap: 6px; justify-content: center; }
+.invoice-dates span { color: var(--text-muted); }
+.invoice-dates strong { color: var(--text); }
+
+/* ستون چپ */
+.header-left { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.invoice-qr { text-align: center; }
+.invoice-qr img {
+  border: 2px solid var(--border); border-radius: 10px;
+  padding: 5px;
+}
+.invoice-qr p { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+.invoice-actions-download { display: flex; flex-direction: column; gap: 8px; }
+.btn-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 18px; border-radius: var(--radius-sm);
+  font-size: 12.5px; font-weight: 700; text-align: center;
+  transition: all .2s; border: 1.5px solid;
+}
+.btn-action:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.btn-print  { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+.btn-img    { border-color: var(--green);   color: var(--green);   background: var(--green-soft); }
+
+/* ───────────────────────────────────────────
+   خط جداکننده
+─────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--border), transparent);
+  margin: 2px 32px;
+}
+
+/* ───────────────────────────────────────────
+   بخش اطلاعات طرفین
+─────────────────────────────────────────── */
+.parties-section {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; padding: 20px 32px;
+  background: var(--bg2);
+}
+.party-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+.party-title {
+  font-size: 13px; font-weight: 800; color: var(--primary);
+  margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+.party-info div { font-size: 13.5px; line-height: 2; }
+.party-info span { color: var(--text-muted); margin-left: 4px; font-size: 13px; }
+.party-info strong { color: var(--text); }
+
+/* ───────────────────────────────────────────
+   جدول اقلام
+─────────────────────────────────────────── */
+.invoice-table-section { padding: 24px 32px 0; }
+.invoice-table-section-title {
+  font-size: 14px; font-weight: 800; color: var(--text);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.invoice-table-section-title::before {
+  content: '';
+  display: inline-block; width: 4px; height: 18px;
+  background: var(--primary); border-radius: 4px;
+}
+.invoice-table-wrap { overflow-x: auto; }
+.invoice-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 13.5px;
+}
+.invoice-table thead tr {
+  background: var(--text);
+  color: #fff;
+}
+.invoice-table th {
+  padding: 13px 12px; font-weight: 700; white-space: nowrap;
+  font-size: 13px;
+}
+.invoice-table th:first-child  { border-radius: 0 10px 10px 0; }
+.invoice-table th:last-child   { border-radius: 10px 0 0 10px; }
+.invoice-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: center; vertical-align: middle;
+}
+.invoice-table .td-desc { text-align: right; }
+.invoice-table .td-total { font-weight: 800; color: var(--primary); }
+.invoice-table .td-code  { font-size: 12px; color: var(--text-muted); font-family: monospace, sans-serif; direction: ltr; text-align: center; }
+.invoice-table .td-discount { color: var(--green); font-weight: 700; }
+.invoice-table .td-after-disc { color: var(--text); font-weight: 700; }
+.invoice-table .td-tax  { color: var(--yellow); font-weight: 700; white-space: nowrap; }
+.invoice-table .td-after-tax { font-weight: 800; color: var(--primary); }
+.invoice-table .td-muted { color: var(--text-muted); font-weight: 400; }
+.tax-pct-badge {
+  display: inline-block; background: rgba(245,158,11,.12); color: var(--yellow);
+  border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 700;
+  margin-right: 3px; vertical-align: middle;
+}
+/* جمع به حروف مانده */
+.words-remaining-box {
+  border-color: var(--red);
+}
+.words-remaining-box strong { color: var(--red); }
+.invoice-table tbody tr:nth-child(odd)  { background: var(--white); }
+.invoice-table tbody tr:nth-child(even) { background: var(--bg2); }
+.invoice-table tbody tr:hover { background: var(--primary-soft); }
+.item-desc { color: var(--text-muted); font-size: 11.5px; display: block; margin-top: 3px; }
+.row-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary-soft2); color: var(--primary);
+  font-size: 12px; font-weight: 800;
+}
+
+/* ───────────────────────────────────────────
+   جمع کل
+─────────────────────────────────────────── */
+.invoice-totals {
+  padding: 20px 32px 24px;
+  display: flex; justify-content: flex-end;
+  background: var(--bg2);
+}
+.totals-box {
+  min-width: 340px;
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.totals-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 18px; font-size: 14px;
+  border-bottom: 1px dashed var(--border);
+}
+.totals-row:last-child { border-bottom: none; }
+.totals-row span   { color: var(--text-muted); }
+.totals-row strong { color: var(--text); font-weight: 700; }
+.totals-row.discount strong { color: var(--green); }
+.totals-row.grand-total {
+  background: var(--primary); color: #fff;
+  padding: 15px 18px; font-size: 16px; font-weight: 800; border: none;
+}
+.totals-row.grand-total span   { color: rgba(255,255,255,.85); }
+.totals-row.grand-total strong { color: #fff; font-size: 18px; }
+.totals-row.paid   strong { color: var(--green); }
+.totals-row.remaining {
+  background: #fff5f5; font-weight: 700;
+}
+.totals-row.remaining span   { color: var(--red); }
+.totals-row.remaining strong { color: var(--red); font-size: 16px; }
+
+/* ───────────────────────────────────────────
+   تاریخچه پرداخت‌ها
+─────────────────────────────────────────── */
+.section-payments { padding: 0 32px 24px; }
+.section-title {
+  font-size: 14px; font-weight: 800; color: var(--text);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.section-title::before {
+  content: ''; display: inline-block;
+  width: 4px; height: 18px;
+  background: var(--green); border-radius: 4px;
+}
+.payments-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.payments-table thead tr { background: var(--text); color: #fff; }
+.payments-table th { padding: 11px 12px; font-weight: 700; }
+.payments-table th:first-child { border-radius: 0 10px 10px 0; }
+.payments-table th:last-child  { border-radius: 10px 0 0 10px; }
+.payments-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: center; }
+.payments-table tbody tr:nth-child(even) td { background: var(--bg2); }
+
+/* ───────────────────────────────────────────
+   یادداشت‌ها
+─────────────────────────────────────────── */
+.invoice-notes-wrap { padding: 0 32px 20px; }
+.invoice-note-box {
+  background: var(--bg2); border-radius: var(--radius-sm);
+  padding: 16px 18px; margin-bottom: 10px;
+  border-right: 4px solid var(--primary);
+  font-size: 13.5px; line-height: 1.9; color: var(--text-muted);
+}
+.invoice-note-box h4 {
+  font-weight: 800; color: var(--text); font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* ───────────────────────────────────────────
+   دکمه پرداخت پایین
+─────────────────────────────────────────── */
+.invoice-pay-section {
+  text-align: center;
+  padding: 28px 32px;
+  background: #fff5f5;
+  border-top: 1px solid var(--border);
+}
+.pay-amount-display {
+  font-size: 16px; margin-bottom: 18px; color: var(--text-muted);
+}
+.pay-amount-display strong {
+  color: var(--primary); font-size: 26px; font-weight: 800;
+  margin-right: 8px; display: inline-block;
+}
+.pay-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--primary);
+  color: #fff; border: none;
+  padding: 14px 48px; font-size: 16px; border-radius: 50px;
+  font-weight: 800; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(228,21,34,.4);
+  transition: transform .2s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.pay-btn::after {
+  content: ''; position: absolute; top: 0; left: -110%; width: 100%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+  transform: skewX(-20deg); transition: left .6s ease; pointer-events: none;
+}
+.pay-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(228,21,34,.45); }
+.pay-btn:hover::after { left: 110%; }
+
+.paid-stamp {
+  text-align: center; padding: 28px;
+  background: var(--green-soft);
+  border-top: 1px solid rgba(34,197,94,.2);
+}
+.paid-stamp span {
+  display: inline-block; padding: 14px 40px;
+  border: 2px dashed var(--green); color: var(--green);
+  border-radius: 12px; font-size: 16px; font-weight: 800;
+  transform: rotate(-1.5deg);
+}
+
+/* ───────────────────────────────────────────
+   فوتر
+─────────────────────────────────────────── */
+.invoice-footer-bar {
+  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+  background: var(--text); color: rgba(255,255,255,.8);
+  padding: 16px 24px; font-size: 13px;
+}
+.invoice-footer-bar span { display: flex; align-items: center; gap: 6px; }
+
+/* ───────────────────────────────────────────
+   بخش‌های ادمین
+─────────────────────────────────────────── */
+.emdad-admin-stats{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0 24px;}
+.stat-card{flex:1;min-width:140px;background:#fff;border-radius:10px;padding:16px;border-right:4px solid var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.stat-card h4{font-size:12px;color:var(--text-muted);margin-bottom:6px;}
+.stat-card strong{font-size:20px;color:var(--primary);}
+.stat-card.green strong{color:var(--green);}
+.stat-card.red strong{color:var(--red);}
+.emdad-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.emdad-filters a{padding:6px 16px;border-radius:20px;font-size:13px;background:#f0f2f5;color:#555;border:1px solid var(--border);}
+.emdad-filters a.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.emdad-search input{border:1px solid var(--border);border-radius:8px;padding:8px 12px;width:240px;}
+.emdad-table{width:100%;border-collapse:collapse;font-size:13px;}
+.emdad-table thead tr{background:var(--primary);color:#fff;}
+.emdad-table th{padding:12px 8px;font-weight:700;white-space:nowrap;}
+.emdad-table td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:center;}
+.emdad-table tbody tr:hover{background:var(--primary-soft);}
+.status-badge{display:inline-block;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:700;color:#fff;}
+.status-draft{background:#95a5a6;}
+.status-sent{background:#f59e0b;}
+.status-paid{background:var(--green);}
+.status-partial{background:#f97316;}
+.status-cancelled{background:var(--red);}
+.btn-sm{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;border:1.5px solid;cursor:pointer;}
+.btn-view{border-color:var(--primary);color:var(--primary);}
+.btn-edit{border-color:var(--yellow);color:var(--yellow);}
+.btn-del{border-color:var(--red);color:var(--red);}
+.emdad-form-card{background:#fff;border-radius:10px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.emdad-form-card h3{color:var(--primary);font-size:15px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--border);}
+.emdad-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.emdad-field{flex:1;min-width:160px;display:flex;flex-direction:column;}
+.emdad-field label{font-size:13px;font-weight:700;color:#555;margin-bottom:4px;}
+.emdad-field input,.emdad-field select,.emdad-field textarea{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;color:var(--text);width:100%;transition:border-color .2s;}
+.emdad-field input:focus,.emdad-field select:focus,.emdad-field textarea:focus{outline:none;border-color:var(--primary);}
+.emdad-field textarea{resize:vertical;min-height:70px;}
+.item-row{background:var(--bg2);border-radius:8px;padding:12px;margin-bottom:10px;border:1px solid var(--border);position:relative;}
+.item-row .remove-item{position:absolute;top:10px;left:10px;width:24px;height:24px;background:var(--red);color:#fff;border-radius:50%;font-size:14px;line-height:24px;text-align:center;cursor:pointer;}
+.items-header{display:grid;grid-template-columns:3fr 1fr 1fr 2fr 1fr;gap:8px;font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px;padding:0 6px;}
+.item-row .item-inputs{display:grid;grid-template-columns:3fr 1fr 1fr 2fr 1fr;gap:8px;}
+.item-row .item-inputs input,.item-row .item-inputs select{border:1.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;background:#fff;}
+.btn-add-item{background:var(--primary);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;cursor:pointer;margin-top:8px;}
+.btn-submit{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;padding:13px 40px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(228,21,34,.3);transition:transform .2s;}
+.btn-submit:hover{transform:translateY(-2px);}
+.invoice-total-preview{background:var(--primary);color:#fff;border-radius:10px;padding:14px 18px;font-size:16px;font-weight:800;text-align:center;margin-top:10px;}
+
+/* ───────────────────────────────────────────
+   ریسپانسیو
+─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .invoice-header{grid-template-columns:1fr;gap:16px;padding:20px;}
+  .header-left{align-items:flex-start;}
+  .invoice-actions-download{flex-direction:row;}
+  .parties-section{grid-template-columns:1fr;padding:16px 20px;}
+  .invoice-table th,.invoice-table td{padding:9px 7px;font-size:12px;}
+  .totals-box{min-width:unset;width:100%;}
+  .invoice-totals{padding:16px 20px;}
+  .invoice-table-section{padding:16px 20px 0;}
+  .invoice-table-section-title,.section-title{font-size:13px;}
+  .section-payments{padding:0 20px 16px;}
+  .invoice-notes-wrap{padding:0 20px 16px;}
+  .invoice-pay-section{padding:20px;}
+  .emdad-invoice-container{border-radius:0;}
+  .pay-bar-inner{flex-direction:column;text-align:center;}
+  .divider{margin:2px 20px;}
+  .invoice-footer-bar{gap:14px;font-size:12px;padding:12px 16px;}
+}
+
+/* ───────────────────────────────────────────
+   بسم الله
+─────────────────────────────────────────── */
+.bismillah {
+  font-size: 13px; color: var(--text-muted);
+  margin-bottom: 6px; letter-spacing: .5px;
+  font-style: italic;
+}
+
+/* ───────────────────────────────────────────
+   اطلاعات طرفین - طرح جدید
+─────────────────────────────────────────── */
+.pi-row   { display: flex; align-items: baseline; gap: 6px; font-size: 13.5px; line-height: 2; }
+.pi-label { color: var(--text-muted); font-size: 13px; white-space: nowrap; min-width: 90px; }
+.pi-val   { color: var(--text); flex: 1; }
+.seller-box { border-top-color: var(--primary); }
+.buyer-box  { border-top-color: #111; }
+
+/* ───────────────────────────────────────────
+   ردیف جمع پایین جدول
+─────────────────────────────────────────── */
+.subtotal-row td { background: var(--bg2) !important; font-weight: 700; }
+.subtotal-label  { color: var(--text-muted); text-align: left; }
+
+/* ───────────────────────────────────────────
+   بخش خلاصه مالی
+─────────────────────────────────────────── */
+.finance-summary-section {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 20px; padding: 20px 32px 24px;
+  background: var(--bg2);
+  align-items: start;
+}
+.finance-left { display: flex; flex-direction: column; gap: 14px; }
+
+/* اطلاعات بانکی */
+.bank-info-box {
+  background: var(--white); border-radius: var(--radius);
+  padding: 16px 18px; border: 1px solid var(--border);
+  border-right: 4px solid var(--primary);
+}
+.bank-info-title {
+  font-size: 13px; font-weight: 800; color: var(--primary);
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.bank-row { display: flex; gap: 8px; font-size: 13px; line-height: 2.1; align-items: baseline; }
+.bank-row span   { color: var(--text-muted); min-width: 90px; font-size: 12.5px; }
+.bank-row strong { color: var(--text); font-weight: 700; }
+.ltr-text { direction: ltr; display: inline-block; font-family: monospace, sans-serif; font-size: 13px; letter-spacing: .5px; }
+
+/* مبلغ به حروف */
+.words-amount-box {
+  background: var(--white); border-radius: var(--radius-sm);
+  padding: 12px 16px; border: 1px dashed var(--primary);
+  font-size: 13px; line-height: 1.8; color: var(--text-muted);
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline;
+}
+.words-amount-box strong { color: var(--text); font-weight: 800; font-size: 14px; }
+
+/* جدول اعداد */
+.totals-box {
+  min-width: 320px; background: var(--white);
+  border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.totals-row         { display:flex; justify-content:space-between; align-items:center; padding:11px 18px; font-size:14px; border-bottom:1px dashed var(--border); }
+.totals-row:last-child { border-bottom:none; }
+.totals-row span    { color:var(--text-muted); }
+.totals-row strong  { color:var(--text); font-weight:700; }
+.discount-row strong{ color:var(--green); }
+.grand-total {
+  background:var(--primary); color:#fff;
+  padding:15px 18px; font-size:16px; font-weight:800; border:none;
+}
+.grand-total span   { color:rgba(255,255,255,.85); }
+.grand-total strong { color:#fff; font-size:18px; }
+.paid-row    strong { color:var(--green); }
+.remaining-row { background:#fff5f5; }
+.remaining-row span  { color:var(--red); font-weight:700; }
+.remaining-row strong{ color:var(--red); font-size:16px; }
+
+/* ───────────────────────────────────────────
+   امضا و مهر
+─────────────────────────────────────────── */
+.signature-section {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; padding: 24px 32px;
+  border-top: 1px solid var(--border);
+}
+.signature-box {
+  display: flex; flex-direction: column; gap: 8px; text-align: center;
+}
+.sig-label {
+  font-size: 13.5px; font-weight: 800; color: var(--text);
+  padding-bottom: 6px; border-bottom: 2px solid var(--primary);
+}
+.sig-area {
+  height: 90px; border: 1px dashed var(--border);
+  border-radius: var(--radius-sm); background: var(--bg2);
+}
+.sig-name {
+  font-size: 12.5px; color: var(--text-muted);
+}
+
+/* ───────────────────────────────────────────
+   تاریخ‌ها
+─────────────────────────────────────────── */
+.date-row { display: flex; gap: 6px; justify-content: center; }
+
+/* ───────────────────────────────────────────
+   ریسپانسیو اضافی
+─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .finance-summary-section { grid-template-columns: 1fr; padding: 16px 20px; }
+  .totals-box { min-width: unset; width: 100%; }
+  .signature-section { grid-template-columns: 1fr; padding: 20px; }
+}
+
+/* ───────────────────────────────────────────
+   چاپ / PDF
+─────────────────────────────────────────── */
+@media print {
+
+  /* ── اندازه صفحه A4 - margin صفر، padding رو به wrap دادیم ── */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  /* ── اجبار رنگ‌ها ── */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* ── پنهان کردن عناصر غیر فاکتور ── */
+  .emdad-pay-bar,
+  .invoice-actions-download,
+  .btn-action, .btn-print, .btn-img,
+  .invoice-pay-section,
+  .paid-stamp,
+  #wpadminbar, .admin-bar { display: none !important; }
+
+  /* ── ریست کامل html/body ── */
+  html {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* ── wrap: فاصله از لبه‌های صفحه اینجاست، نه در @page ── */
+  .emdad-invoice-wrap {
+    padding: 8mm 10mm !important;
+    background: #fff !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ── کانتینر اصلی ── */
+  .emdad-invoice-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ── هدر: سه ستون فشرده‌تر ── */
+  .invoice-header {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    gap: 12px !important;
+    padding: 16px 16px 12px !important;
+  }
+  .company-details h2    { font-size: 13px !important; }
+  .company-details p     { font-size: 10px !important; }
+  .invoice-type-title    { font-size: 16px !important; }
+  .invoice-dates         { font-size: 10px !important; padding: 6px 10px !important; }
+  .invoice-qr img        { width: 80px !important; height: 80px !important; }
+  .invoice-qr p          { font-size: 9px !important; }
+
+  /* ── اطلاعات طرفین ── */
+  .parties-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 10px 16px !important;
+    background: #f9f9f9 !important;
+  }
+  .party-box  { padding: 10px 12px !important; }
+  .party-title { font-size: 11px !important; margin-bottom: 6px !important; padding-bottom: 5px !important; }
+  .pi-row { font-size: 10.5px !important; line-height: 1.8 !important; }
+  .pi-label { min-width: 70px !important; font-size: 10px !important; }
+
+  /* ── جدول اقلام ── */
+  .invoice-table-section { padding: 10px 16px 0 !important; }
+  .invoice-table-section-title { font-size: 11px !important; margin-bottom: 8px !important; }
+  .invoice-table th, .invoice-table td { padding: 5px 5px !important; font-size: 9.5px !important; }
+  .invoice-table th small { font-size: 8px !important; }
+  .invoice-table thead th { background: #e41522 !important; color: #fff !important; }
+  .invoice-table tbody tr:nth-child(even) td { background: #f9f9f9 !important; }
+  .subtotal-row td { background: #f5f5f7 !important; font-weight: 700 !important; }
+  .row-num { width: 20px !important; height: 20px !important; font-size: 9px !important; }
+  .item-desc { font-size: 8.5px !important; }
+  .tax-pct-badge { font-size: 8px !important; padding: 0 3px !important; }
+  .td-code { font-size: 8.5px !important; }
+
+  /* ── خلاصه مالی: کنار هم ── */
+  .finance-summary-section {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 12px !important;
+    padding: 10px 16px 12px !important;
+    background: #f5f5f7 !important;
+    align-items: start !important;
+  }
+  .totals-box {
+    min-width: unset !important;
+    width: 260px !important;
+  }
+  .totals-row { padding: 6px 12px !important; font-size: 10px !important; }
+  .grand-total { padding: 9px 12px !important; font-size: 11px !important; background: #e41522 !important; color: #fff !important; }
+  .grand-total span  { color: rgba(255,255,255,.85) !important; }
+  .grand-total strong { color: #fff !important; font-size: 13px !important; }
+  .remaining-row { background: #fff5f5 !important; }
+  .remaining-row span, .remaining-row strong { color: #ef4444 !important; }
+  .paid-row strong { color: #22c55e !important; }
+  .tax-row strong { color: #f59e0b !important; }
+  .bank-info-box { padding: 10px 12px !important; border-right: 4px solid #e41522 !important; }
+  .bank-info-title { font-size: 11px !important; margin-bottom: 6px !important; }
+  .bank-row { font-size: 10px !important; line-height: 1.8 !important; }
+  .words-amount-box { font-size: 10px !important; padding: 7px 10px !important; }
+  .words-remaining-box { border-color: #ef4444 !important; }
+  .words-remaining-box strong { color: #ef4444 !important; }
+
+  /* ── پرداخت‌ها ── */
+  .section-payments { padding: 0 16px 10px !important; }
+  .section-title { font-size: 11px !important; margin-bottom: 8px !important; }
+  .section-title::before { background: #22c55e !important; }
+  .payments-table th, .payments-table td { padding: 6px 8px !important; font-size: 10px !important; }
+  .payments-table thead tr, .payments-table th { background: #111 !important; color: #fff !important; }
+
+  /* ── یادداشت‌ها ── */
+  .invoice-notes-wrap { padding: 0 16px 10px !important; }
+  .invoice-note-box { padding: 8px 12px !important; font-size: 10.5px !important; border-right: 4px solid #e41522 !important; }
+  .invoice-note-box h4 { font-size: 11px !important; }
+
+  /* ── امضا و مهر ── */
+  .signature-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+    padding: 12px 16px !important;
+  }
+  .sig-label { font-size: 11px !important; }
+  .sig-area  { height: 70px !important; background: #f5f5f7 !important; }
+  .sig-name  { font-size: 10px !important; }
+
+  /* ── فوتر ── */
+  .invoice-footer-bar {
+    background: #111 !important;
+    color: rgba(255,255,255,.8) !important;
+    font-size: 10px !important;
+    padding: 10px 16px !important;
+    gap: 16px !important;
+  }
+
+  /* ── جلوگیری از بریده شدن ── */
+  .invoice-table tr,
+  .payments-table tr,
+  .party-box,
+  .signature-box { page-break-inside: avoid; }
+  .finance-summary-section,
+  .signature-section { page-break-inside: avoid; }
+
+  /* ── رنگ‌های متفرقه ── */
+  .invoice-top-bar { background: #e41522 !important; height: 4px !important; }
+  .invoice-type-title { color: #e41522 !important; -webkit-text-fill-color: #e41522 !important; background: none !important; }
+  .party-title { color: #e41522 !important; }
+  .party-box { border-top: 3px solid #e41522 !important; }
+  .seller-box { border-top-color: #e41522 !important; }
+  .buyer-box  { border-top-color: #111 !important; }
+  .badge-num  { background: #111 !important; color: #fff !important; }
+  .divider { margin: 1px 16px !important; }
+}

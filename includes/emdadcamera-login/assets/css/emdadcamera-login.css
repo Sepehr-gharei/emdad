@@ -1,0 +1,756 @@
+/* ================================================
+   EmdadCamera Login — Dual Portal CSS
+   ?login  → مشتریان (روشن، مینیمال)
+   ?staff-login → کارمندان (تیره، حرفه‌ای)
+   ================================================ */
+
+/* ---- ریست پایه ---- */
+.ec-page *,
+.ec-page *::before,
+.ec-page *::after {
+  box-sizing: border-box;
+  font-family: "yekanbakh", inherit !important;
+}
+
+/* ================================================
+   صفحه بیرونی — مشترک
+   ================================================ */
+.ec-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  direction: rtl;
+}
+
+/* ================================================
+   پورتال مشتری — ?login
+   ================================================ */
+body.ec-customer-page {
+  background: #ffffff;
+}
+
+body.ec-customer-page .ec-page {
+  background: #fafafa;
+}
+
+/* کارت مشتری */
+.ec-customer-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border: 1px solid #ebebeb;
+  border-radius: 18px;
+  padding: 40px 36px 32px;
+  position: relative;
+}
+
+/* نوار رنگی بالا */
+.ec-customer-card::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #a5111b, #e41522, #f0545e);
+  border-radius: 18px 18px 0 0;
+}
+
+/* لوگو مشتری */
+.ec-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.ec-logo-icon {
+  width: 52px;
+  height: 52px;
+  background: #e41522;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ec-logo-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
+}
+
+.ec-logo-name {
+  font-size: 16px;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -0.3px;
+}
+
+/* عنوان */
+.ec-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+  text-align: center;
+  margin: 0 0 6px;
+}
+
+.ec-sub {
+  font-size: 12px;
+  color: #aaa;
+  text-align: center;
+  font-weight: 600;
+  margin: 0 0 24px;
+}
+
+/* فیلدها */
+.ec-field {
+  margin-bottom: 14px;
+}
+
+.ec-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.ec-field input {
+  width: 100%;
+  height: 48px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  background: #fafafa;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  direction: ltr;
+  text-align: right;
+}
+
+.ec-field input::placeholder {
+  color: #ccc;
+  font-weight: 400;
+}
+
+.ec-field input:focus {
+  border-color: #e41522;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(228,21,34,0.08);
+}
+
+/* فیلد رمز */
+.ec-field-pw {
+  position: relative;
+}
+
+.ec-field-pw input {
+  padding-left: 44px;
+}
+
+.ec-eye-btn {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.ec-eye-btn:hover { color: #e41522; }
+
+.ec-eye-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* دکمه اصلی */
+.ec-btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: "yekanbakh", inherit !important;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ec-btn-primary {
+  background: #e41522;
+  color: #fff;
+}
+
+.ec-btn-primary:hover {
+  background: #a5111b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(228,21,34,0.25);
+}
+
+.ec-btn-primary:active {
+  transform: translateY(0);
+}
+
+.ec-btn-ghost {
+  background: transparent;
+  color: #999;
+  border: 1.5px solid #e8e8e8 !important;
+  margin-top: 8px;
+}
+
+.ec-btn-ghost:hover {
+  border-color: #ccc !important;
+  color: #555;
+}
+
+/* لودینگ */
+.ec-btn.loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.ec-btn.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 18px; height: 18px;
+  margin: -9px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ec-spin 0.7s linear infinite;
+}
+
+.ec-btn-ghost.loading::after {
+  border: 2px solid rgba(0,0,0,0.15);
+  border-top-color: #e41522;
+}
+
+@keyframes ec-spin { to { transform: rotate(360deg); } }
+
+/* کدهای OTP */
+.ec-otp-wrap {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  direction: ltr;
+  margin-bottom: 20px;
+}
+
+.ec-otp-digit {
+  width: 56px !important;
+  height: 60px !important;
+  border: 1.5px solid #e8e8e8 !important;
+  border-radius: 10px !important;
+  background: #fafafa !important;
+  text-align: center;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  color: #111 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: all 0.2s !important;
+  padding: 0 !important;
+}
+
+.ec-otp-digit:focus {
+  border-color: #e41522 !important;
+  background: #fff !important;
+  box-shadow: 0 0 0 3px rgba(228,21,34,0.08) !important;
+  transform: scale(1.04);
+}
+
+.ec-otp-digit:not(:placeholder-shown) {
+  border-color: #e41522 !important;
+  color: #e41522 !important;
+}
+
+/* پیام */
+.ec-msg {
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 14px;
+  display: none;
+}
+
+.ec-msg.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; display: block; }
+.ec-msg.error   { background: #fff5f5; color: #a5111b; border: 1px solid rgba(228,21,34,0.2); display: block; }
+
+/* مراحل */
+.ec-step { display: none; }
+.ec-step.active { display: block; }
+
+/* فوتر کارت */
+.ec-card-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.ec-card-footer a {
+  font-size: 12px;
+  color: #bbb;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.ec-card-footer a:hover { color: #e41522; }
+
+/* وضعیت نام کاربری */
+#ec-username-status {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 5px;
+  display: block;
+}
+
+/* ================================================
+   پورتال کارمند — ?staff-login
+   ================================================ */
+body.ec-staff-page {
+  background: #0f0f0f;
+}
+
+body.ec-staff-page .ec-page {
+  background: #0f0f0f;
+  position: relative;
+}
+
+/* گرید تزئینی پس‌زمینه */
+body.ec-staff-page .ec-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(228,21,34,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(228,21,34,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* هاله قرمز */
+body.ec-staff-page .ec-page::after {
+  content: "";
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(228,21,34,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* کارت کارمند */
+.ec-staff-card {
+  width: 100%;
+  max-width: 380px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 18px;
+  padding: 38px 34px 30px;
+  position: relative;
+  z-index: 1;
+}
+
+/* خط بالای کارت */
+.ec-staff-card::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e41522, transparent);
+  border-radius: 18px 18px 0 0;
+}
+
+/* لوگو کارمند */
+.ec-staff-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.ec-staff-logo-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(228,21,34,0.15);
+  border: 1px solid rgba(228,21,34,0.3);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ec-staff-logo-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #e41522;
+}
+
+.ec-staff-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ec-staff-logo-name {
+  font-size: 15px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.ec-staff-logo-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e41522;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* عنوان کارمند */
+.ec-staff-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.ec-staff-sub {
+  font-size: 12px;
+  color: #555;
+  font-weight: 600;
+  margin: 0 0 26px;
+}
+
+/* فیلد کارمند */
+.ec-staff-field {
+  margin-bottom: 14px;
+}
+
+.ec-staff-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ec-staff-field input {
+  width: 100%;
+  height: 46px;
+  border: 1px solid #2a2a2a;
+  border-radius: 9px;
+  background: #111;
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  direction: ltr;
+  text-align: right;
+}
+
+.ec-staff-field input::placeholder {
+  color: #333;
+  font-weight: 400;
+}
+
+.ec-staff-field input:focus {
+  border-color: #e41522;
+  box-shadow: 0 0 0 3px rgba(228,21,34,0.1);
+}
+
+/* فیلد رمز کارمند */
+.ec-staff-field-pw {
+  position: relative;
+}
+
+.ec-staff-field-pw input {
+  padding-left: 44px;
+}
+
+.ec-staff-eye-btn {
+  position: absolute;
+  left: 12px;
+  top: 67%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #333;
+  display: flex;
+  transition: color 0.2s;
+}
+
+.ec-staff-eye-btn:hover { color: #e41522; }
+.ec-staff-eye-btn svg { width: 18px; height: 18px; }
+
+/* دکمه کارمند */
+.ec-staff-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: "yekanbakh", inherit !important;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.ec-staff-btn-primary {
+  background: #e41522;
+  color: #fff;
+}
+
+.ec-staff-btn-primary:hover {
+  background: #c9111e;
+  box-shadow: 0 4px 20px rgba(228,21,34,0.4);
+}
+
+.ec-staff-btn.loading {
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.ec-staff-btn.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 18px; height: 18px;
+  margin: -9px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ec-spin 0.7s linear infinite;
+}
+
+/* پیام کارمند */
+.ec-staff-msg {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 14px;
+  display: none;
+}
+
+.ec-staff-msg.success {
+  background: rgba(22,163,74,0.1);
+  color: #4ade80;
+  border: 1px solid rgba(22,163,74,0.2);
+  display: block;
+}
+
+.ec-staff-msg.error {
+  background: rgba(228,21,34,0.1);
+  color: #f87171;
+  border: 1px solid rgba(228,21,34,0.2);
+  display: block;
+}
+
+/* فوتر کارمند */
+.ec-staff-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ec-staff-footer a {
+  font-size: 11px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.ec-staff-footer a:hover { color: #e41522; }
+
+.ec-staff-badge {
+  font-size: 10px;
+  color: #2a2a2a;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* ================================================
+   رسپانسیو
+   ================================================ */
+@media (max-width: 480px) {
+  .ec-customer-card,
+  .ec-staff-card {
+    padding: 28px 20px 24px;
+    border-radius: 14px;
+  }
+
+  .ec-otp-digit {
+    width: 48px !important;
+    height: 52px !important;
+    font-size: 20px !important;
+  }
+
+  .ec-otp-wrap { gap: 8px; }
+}
+
+/* ================================================
+   انیمیشن
+   ================================================ */
+@keyframes ec-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ec-customer-card,
+.ec-staff-card {
+  animation: ec-fade-up 0.4s cubic-bezier(0.2, 0.98, 0.4, 1) both;
+}
+
+/* لرزش در خطای کارمند */
+@keyframes ec-shake {
+  0%,100% { transform: translateX(0); }
+  20%,60% { transform: translateX(-6px); }
+  40%,80% { transform: translateX(6px); }
+}
+.ec-shake { animation: ec-shake 0.4s ease; }
+
+/* ================================================
+   فوتر terms (جایگزین لینک‌های قدیمی)
+   ================================================ */
+.ec-card-footer-terms {
+  text-align: center;
+  font-size: 11.5px;
+  color: #888;
+  line-height: 1.7;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 8px;
+}
+
+.ec-card-footer-terms a {
+  color: #e41522;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.ec-card-footer-terms a:hover {
+  text-decoration: underline;
+}
+
+.ec-staff-footer-terms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #aaa;
+  padding-top: 14px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 8px;
+}
+
+.ec-staff-footer-terms a {
+  color: #e41522;
+  text-decoration: none;
+}
+
+.ec-staff-footer-terms a:hover {
+  text-decoration: underline;
+}
+
+.ec-staff-footer-terms span {
+  color: #ddd;
+}
+
+/* ================================================
+   آلرت ایمیل نه‌یافته (دیجیکالایی)
+   ================================================ */
+.ec-alert-email {
+  display: block;
+  line-height: 1.6;
+}
+
+.ec-alert-email small {
+  font-size: 11.5px;
+  color: #c55;
+  opacity: 0.85;
+}
+
+/* ================================================
+   دکمه ارسال مجدد پیامک (لینک‌مانند)
+   ================================================ */
+.ec-link-btn {
+  background: none;
+  border: none;
+  color: #e41522;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.ec-link-btn:hover { opacity: 0.75; }
+.ec-link-btn:disabled { color: #aaa; cursor: default; text-decoration: none; }
+
+/* ================================================
+   فیلد identifier (موبایل یا ایمیل)
+   ================================================ */
+#ec-identifier {
+  text-align: left;
+  letter-spacing: 0.5px;
+}
+
+.resend-timer-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px;
+}
+#resend-code-btn { background-color: #0073aa; color: #fff; border: none; padding: 8px 15px; cursor: pointer; transition: 0.3s;
+}
+#resend-code-btn:disabled { background-color: #cccccc; color: #666666; cursor: not-allowed; opacity: 0.7;
+}
+#timer-display { font-weight: bold; color: #d9534f; font-family: monospace; font-size: 16px;
+}
+
+.ec-timer-display {
+font-size: 13px; font-weight: 800; color: #a5111b; margin-bottom: 8px; direction: ltr; }
+
+#ec-btn-resend-sms:disabled {
+color: #999; text-decoration: none; }
