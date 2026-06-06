@@ -2,12 +2,12 @@
 $status_labels = ['draft'=>'پیش‌نویس','sent'=>'ارسال شده','paid'=>'پرداخت شده','partial'=>'پرداخت ناقص','cancelled'=>'لغو شده'];
 $current_status = sanitize_text_field($_GET['status'] ?? 'all');
 $search = sanitize_text_field($_GET['search'] ?? '');
+$filter_date = sanitize_text_field($_GET['filter_date'] ?? '');
 ?>
-<div class="wrap">
-    <h1 class="wp-heading-inline">📋 مدیریت فاکتورها</h1>
-    <a href="<?php echo admin_url('admin.php?page=emdad-invoice-new'); ?>" class="page-title-action">+ فاکتور جدید</a>
-
-    <!-- Stats Cards -->
+<div class="emdad-invoices-panel">
+    <h2 class="emdad-panel-title" style="margin-top:20px;margin-bottom:16px;">📋 مدیریت فاکتورها
+    <a href="<?php echo admin_url('admin.php?page=emdad-invoice-new'); ?>" class="page-title-action" style="font-size:13px;">+ فاکتور جدید</a></h2>
+    
     <div class="emdad-admin-stats">
         <div class="stat-card">
             <h4>کل فاکتورها</h4>
@@ -35,18 +35,22 @@ $search = sanitize_text_field($_GET['search'] ?? '');
         </div>
     </div>
 
-    <!-- Filters & Search -->
     <div class="emdad-filters">
-        <a href="<?php echo admin_url('admin.php?page=emdad-invoices'); ?>" class="<?php echo $current_status === 'all' ? 'active' : ''; ?>">همه</a>
+        <a href="<?php echo admin_url('admin.php?page=emdad-erp&tab=invoices'); ?>" class="<?php echo $current_status === 'all' ? 'active' : ''; ?>">همه</a>
         <?php foreach ($status_labels as $k => $v): ?>
-        <a href="<?php echo admin_url('admin.php?page=emdad-invoices&status=' . $k); ?>" class="<?php echo $current_status === $k ? 'active' : ''; ?>"><?php echo esc_html($v); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=emdad-erp&tab=invoices&status=' . $k); ?>" class="<?php echo $current_status === $k ? 'active' : ''; ?>"><?php echo esc_html($v); ?></a>
         <?php endforeach; ?>
+        
         <form method="get" action="<?php echo admin_url('admin.php'); ?>" class="emdad-search" style="display:flex;gap:6px;margin-right:auto;">
-            <input type="hidden" name="page" value="emdad-invoices">
+            <input type="hidden" name="page" value="emdad-erp">
+            <input type="hidden" name="tab" value="invoices">
             <input type="hidden" name="status" value="<?php echo esc_attr($current_status); ?>">
+            
+            <input type="text" name="filter_date" data-jdp placeholder="تاریخ (مثال: 1403/05/12)" value="<?php echo esc_attr($filter_date); ?>" style="width:160px;text-align:center;">
+            
             <input type="text" name="search" placeholder="جستجو (نام، شماره، تلفن)..." value="<?php echo esc_attr($search); ?>">
             <button type="submit" class="button">🔍</button>
-            <?php if ($search): ?><a href="<?php echo admin_url('admin.php?page=emdad-invoices'); ?>" class="button">✕</a><?php endif; ?>
+            <?php if ($search || $filter_date): ?><a href="<?php echo admin_url('admin.php?page=emdad-erp&tab=invoices'); ?>" class="button">✕</a><?php endif; ?>
         </form>
     </div>
 
@@ -54,7 +58,6 @@ $search = sanitize_text_field($_GET['search'] ?? '');
     <div class="notice notice-success is-dismissible"><p>✅ فاکتور با موفقیت ذخیره شد!</p></div>
     <?php endif; ?>
 
-    <!-- Table -->
     <table class="emdad-table widefat">
         <thead>
             <tr>
@@ -106,7 +109,6 @@ $search = sanitize_text_field($_GET['search'] ?? '');
         </tbody>
     </table>
 
-    <!-- Pagination -->
     <?php if ($total_pages > 1): ?>
     <div style="margin-top:16px;display:flex;gap:6px;align-items:center;">
         <?php for ($p = 1; $p <= $total_pages; $p++):
@@ -118,9 +120,11 @@ $search = sanitize_text_field($_GET['search'] ?? '');
         <?php endfor; ?>
     </div>
     <?php endif; ?>
-</div>
+</div><script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (typeof jalaliDatepicker !== 'undefined') { jalaliDatepicker.startWatch(); }
+});
 
-<script>
 document.querySelectorAll('.emdad-delete-invoice').forEach(function(btn) {
     btn.addEventListener('click', function() {
         if (!confirm('آیا مطمئن هستید؟ این فاکتور به طور کامل حذف خواهد شد.')) return;

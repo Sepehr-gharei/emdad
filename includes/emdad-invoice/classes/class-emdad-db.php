@@ -235,6 +235,41 @@ class EmdadInvoice_DB {
         return $candidate;
     }
 
+    /**
+     * ثبت پرداخت و به‌روزرسانی وضعیت فاکتور
+     * هم از AJAX ادمین و هم از کال‌بک زرین‌پال استفاده می‌شه
+     */
+    public static function record_payment($invoice_id, $amount, $method = 'cash', $reference_code = '') {
+        global $wpdb;
+
+        $wpdb->insert($wpdb->prefix . 'emdad_invoice_payments', [
+            'invoice_id'     => $invoice_id,
+            'amount'         => $amount,
+            'method'         => $method,
+            'reference_code' => $reference_code,
+            'status'         => 'success',
+            'paid_at'        => current_time('mysql'),
+        ]);
+
+        $total_paid = (float)$wpdb->get_var($wpdb->prepare(
+            "SELECT SUM(amount) FROM {$wpdb->prefix}emdad_invoice_payments WHERE invoice_id=%d AND status='success'",
+            $invoice_id
+        ));
+
+        $invoice   = self::get_invoice($invoice_id);
+        $remaining = max(0, $invoice->total - $total_paid);
+        $status    = $remaining <= 0 ? 'paid' : 'partial';
+
+        $wpdb->update($wpdb->prefix . 'emdad_invoices', [
+            'paid_amount' => $total_paid,
+            'remaining'   => $remaining,
+            'status'      => $status,
+            'updated_at'  => current_time('mysql'),
+        ], ['id' => $invoice_id]);
+
+        return ['remaining' => $remaining, 'status' => $status];
+    }
+
     public static function update_customer_balance($customer_id) {
         global $wpdb;
         $total_debit  = (float)$wpdb->get_var($wpdb->prepare("SELECT COALESCE(SUM(debit),0)  FROM {$wpdb->prefix}emdad_customer_ledger WHERE customer_id=%d", $customer_id));

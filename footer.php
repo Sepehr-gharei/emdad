@@ -77,8 +77,13 @@ $bale = emdadcamera_Get_Setting($contact_info, 'bale');
                     <div class="item" >
                       <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=737571&Code=zLXRTHI08MeIQS30LhwKygxVStPJ5g1V'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=737571&Code=zLXRTHI08MeIQS30LhwKygxVStPJ5g1V' alt='' style='cursor:pointer' code='zLXRTHI08MeIQS30LhwKygxVStPJ5g1V'></a>
                     </div>
-                 <div class="item" >
-                            <div id="zarinpal"><script src="https://www.zarinpal.com/webservice/TrustCode" type="text/javascript"></script></div></div>
+                <div class="item">
+    <div id="zarinpal-wrapper" style="width:80px; overflow:hidden; position:relative;">
+        <script>
+            document.write('<scr'+'ipt src="https://www.zarinpal.com/webservice/TrustCode"><\/scr'+'ipt>');
+        </script>
+    </div>
+</div>
                 </div> 
             </div>
         </div> 

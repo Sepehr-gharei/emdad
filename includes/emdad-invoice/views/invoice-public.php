@@ -69,6 +69,12 @@ $remaining_words = emdad_number_to_words((int)$invoice->remaining);
 </head>
 <body>
 
+<?php if (isset($_GET['paid']) && $_GET['paid'] == '1'): ?>
+<div style="background:#22c55e;color:#fff;font-family:inherit;text-align:center;padding:14px 20px;font-size:15px;font-weight:bold;position:sticky;top:0;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2);">
+    ✅ پرداخت شما با موفقیت ثبت شد — این صفحه به‌روز شده است
+</div>
+<?php endif; ?>
+
 <?php if ($invoice->remaining > 0 && $invoice->status !== 'cancelled'): ?>
 <div class="emdad-pay-bar">
     <div class="pay-bar-inner">
@@ -96,6 +102,14 @@ $remaining_words = emdad_number_to_words((int)$invoice->remaining);
 
 <div class="emdad-invoice-wrap">
 <div class="emdad-invoice-container">
+<?php if ($invoice->status === 'paid'): ?>
+<div class="paid-seal">
+    <span class="seal-stars">★ ★ ★</span>
+    <span class="seal-text-main">تسویه شده</span>
+    <span class="seal-text-sub">PAID IN FULL</span>
+    <span class="seal-stars">★ ★ ★</span>
+</div>
+<?php endif; ?>
 <div class="invoice-top-bar"></div>
 
 <!-- ═══════════════════════ HEADER ═══════════════════════ -->

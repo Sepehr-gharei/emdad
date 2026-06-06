@@ -24,13 +24,16 @@ class EmdadInvoice_Admin {
     }
 
     public function register_menus() {
-        add_menu_page('سیستم فاکتور', 'فاکتورها', 'manage_options', 'emdad-invoices',
-            [$this, 'page_invoices'], 'dashicons-media-spreadsheet', 30);
-        add_submenu_page('emdad-invoices', 'همه فاکتورها', 'همه فاکتورها', 'manage_options',
-            'emdad-invoices', [$this, 'page_invoices']);
-        add_submenu_page('emdad-invoices', 'فاکتور جدید', 'فاکتور جدید ＋', 'manage_options',
+        // منوی اصلی ERP
+        add_menu_page('ERP امداد', 'ERP', 'manage_options', 'emdad-erp',
+            [$this, 'page_erp'], 'dashicons-store', 30);
+
+        // صفحه‌های داخلی (hidden submenu — با parent خودشان ثبت می‌شن تا URL کار کنه)
+        add_submenu_page('emdad-erp', 'فاکتورها', 'فاکتورها', 'manage_options',
+            'emdad-erp', [$this, 'page_erp']);
+        add_submenu_page('emdad-erp', 'فاکتور جدید', 'فاکتور جدید', 'manage_options',
             'emdad-invoice-new', [$this, 'page_invoice_form']);
-        add_submenu_page('emdad-invoices', 'تنظیمات', 'تنظیمات', 'manage_options',
+        add_submenu_page('emdad-erp', 'تنظیمات فاکتور', 'تنظیمات فاکتور', 'manage_options',
             'emdad-invoice-settings', [$this, 'page_settings']);
     }
 
@@ -47,7 +50,7 @@ class EmdadInvoice_Admin {
 
         if ($action === 'save_invoice') {
             $id = $this->save_invoice($_POST);
-            wp_redirect(admin_url('admin.php?page=emdad-invoices&saved=1&id=' . $id));
+            wp_redirect(admin_url('admin.php?page=emdad-erp&tab=invoices&saved=1&id=' . $id));
             exit;
         }
         if ($action === 'save_settings') {
@@ -140,7 +143,30 @@ class EmdadInvoice_Admin {
             'updated_at'            => current_time('mysql'),
         ];
 
+        // در حالت ویرایش: وضعیت را از فرم بگیر و remaining را بر اساس آن تنظیم کن
         if ($invoice_id > 0) {
+            $allowed_statuses = ['draft', 'sent', 'partial', 'paid', 'cancelled'];
+            $new_status = sanitize_text_field($data['invoice_status'] ?? 'sent');
+            if (!in_array($new_status, $allowed_statuses)) $new_status = 'sent';
+            $invoice_data['status'] = $new_status;
+
+            // اگر وضعیت «پرداخت شده» انتخاب شد، remaining را صفر کن و paid_amount را کامل کن
+            if ($new_status === 'paid') {
+                $invoice_data['paid_amount'] = $total;
+                $invoice_data['remaining']   = 0;
+            } elseif ($new_status === 'cancelled') {
+                $invoice_data['remaining'] = 0;
+            }
+            // برای partial و sent مقدار remaining دست‌نخورده بماند (محاسبه از پرداخت‌های واقعی)
+            elseif (in_array($new_status, ['partial', 'sent', 'draft'])) {
+                $total_paid_so_far = (float)$wpdb->get_var($wpdb->prepare(
+                    "SELECT COALESCE(SUM(amount),0) FROM {$wpdb->prefix}emdad_invoice_payments WHERE invoice_id=%d AND status='success'",
+                    $invoice_id
+                ));
+                $invoice_data['paid_amount'] = $total_paid_so_far;
+                $invoice_data['remaining']   = max(0, $total - $total_paid_so_far);
+            }
+
             $wpdb->update($table, $invoice_data, ['id' => $invoice_id]);
             $wpdb->delete($wpdb->prefix . 'emdad_invoice_items', ['invoice_id' => $invoice_id]);
         } else {
@@ -217,16 +243,33 @@ class EmdadInvoice_Admin {
 
     private function save_settings($data) {
         $settings = [
-            'company_name'    => sanitize_text_field($data['company_name'] ?? ''),
-            'company_address' => sanitize_textarea_field($data['company_address'] ?? ''),
-            'company_phone'   => sanitize_text_field($data['company_phone'] ?? ''),
-            'company_website' => sanitize_text_field($data['company_website'] ?? ''),
-            'logo_url'        => esc_url_raw($data['logo_url'] ?? ''),
-            'default_terms'   => sanitize_textarea_field($data['default_terms'] ?? ''),
-            'default_notes'   => sanitize_textarea_field($data['default_notes'] ?? ''),
-            'tax_percent'     => floatval($data['tax_percent'] ?? 9),
-            'seller_name'     => sanitize_text_field($data['seller_name'] ?? ''),
+            // اطلاعات شرکت
+            'company_name'         => sanitize_text_field($data['company_name'] ?? ''),
+            'company_address'      => sanitize_textarea_field($data['company_address'] ?? ''),
+            'company_phone'        => sanitize_text_field($data['company_phone'] ?? ''),
+            'company_mobile'       => sanitize_text_field($data['company_mobile'] ?? ''),
+            'company_postal_code'  => sanitize_text_field($data['company_postal_code'] ?? ''),
+            'company_website'      => sanitize_text_field($data['company_website'] ?? ''),
+            'company_email'        => sanitize_email($data['company_email'] ?? ''),
+            'logo_url'             => esc_url_raw($data['logo_url'] ?? ''),
+            // اطلاعات بانکی
+            'bank_card_number'     => sanitize_text_field($data['bank_card_number'] ?? ''),
+            'bank_sheba'           => sanitize_text_field($data['bank_sheba'] ?? ''),
+            'bank_name'            => sanitize_text_field($data['bank_name'] ?? ''),
+            'bank_account_owner'   => sanitize_text_field($data['bank_account_owner'] ?? ''),
+            // اطلاعات رسمی / مالیاتی
             'seller_economic_code' => sanitize_text_field($data['seller_economic_code'] ?? ''),
+            'company_national_id'  => sanitize_text_field($data['company_national_id'] ?? ''),
+            'seller_name'          => sanitize_text_field($data['seller_name'] ?? ''),
+            // پیش‌فرض‌های مالی
+            'tax_percent'          => floatval($data['tax_percent'] ?? 9),
+            'currency_label'       => sanitize_text_field($data['currency_label'] ?? 'تومان'),
+            // متون پیش‌فرض
+            'default_notes'        => sanitize_textarea_field($data['default_notes'] ?? ''),
+            'default_terms'        => sanitize_textarea_field($data['default_terms'] ?? ''),
+            // درگاه پرداخت
+            'zarrinpal_merchant'   => sanitize_text_field($data['zarrinpal_merchant'] ?? ''),
+            'zarrinpal_sandbox'    => sanitize_text_field($data['zarrinpal_sandbox'] ?? '0'),
         ];
         update_option('emdad_invoice_settings', $settings);
     }
@@ -239,32 +282,8 @@ class EmdadInvoice_Admin {
         $ref        = sanitize_text_field($_POST['reference_code'] ?? '');
         if ($amount <= 0 || $invoice_id <= 0) wp_send_json_error('مبلغ نامعتبر است');
 
-        global $wpdb;
-        $wpdb->insert($wpdb->prefix . 'emdad_invoice_payments', [
-            'invoice_id'     => $invoice_id,
-            'amount'         => $amount,
-            'method'         => $method,
-            'reference_code' => $ref,
-            'status'         => 'success',
-            'paid_at'        => current_time('mysql'),
-        ]);
-
-        $total_paid = (float)$wpdb->get_var($wpdb->prepare(
-            "SELECT SUM(amount) FROM {$wpdb->prefix}emdad_invoice_payments WHERE invoice_id=%d AND status='success'",
-            $invoice_id
-        ));
-        $invoice   = EmdadInvoice_DB::get_invoice($invoice_id);
-        $remaining = max(0, $invoice->total - $total_paid);
-        $status    = $remaining <= 0 ? 'paid' : 'partial';
-
-        $wpdb->update($wpdb->prefix . 'emdad_invoices', [
-            'paid_amount' => $total_paid,
-            'remaining'   => $remaining,
-            'status'      => $status,
-            'updated_at'  => current_time('mysql'),
-        ], ['id' => $invoice_id]);
-
-        wp_send_json_success(['remaining' => $remaining, 'status' => $status]);
+        $result = EmdadInvoice_DB::record_payment($invoice_id, $amount, $method, $ref);
+        wp_send_json_success($result);
     }
 
     public function ajax_change_status() {
@@ -274,8 +293,48 @@ class EmdadInvoice_Admin {
         $status = sanitize_text_field($_POST['status'] ?? '');
         $allowed = ['draft','sent','paid','partial','cancelled'];
         if (!in_array($status, $allowed)) wp_send_json_error('وضعیت نامعتبر');
-        $wpdb->update($wpdb->prefix . 'emdad_invoices', ['status' => $status, 'updated_at' => current_time('mysql')], ['id' => $id]);
-        wp_send_json_success();
+
+        $invoice = EmdadInvoice_DB::get_invoice($id);
+        if (!$invoice) wp_send_json_error('فاکتور یافت نشد');
+
+        // محاسبه مجموع پرداخت‌های واقعی ثبت‌شده
+        $total_paid_real = (float)$wpdb->get_var($wpdb->prepare(
+            "SELECT COALESCE(SUM(amount),0) FROM {$wpdb->prefix}emdad_invoice_payments WHERE invoice_id=%d AND status='success'",
+            $id
+        ));
+
+        $update_data = [
+            'status'     => $status,
+            'updated_at' => current_time('mysql'),
+        ];
+
+        if ($status === 'paid') {
+            // پرداخت کامل دستی: paid_amount کامل، remaining صفر
+            $update_data['paid_amount'] = $invoice->total;
+            $update_data['remaining']   = 0;
+        } elseif ($status === 'cancelled') {
+            $update_data['remaining'] = 0;
+        } elseif (in_array($status, ['sent', 'draft', 'partial'])) {
+            // برگشت به حالت قبل: remaining را بر اساس پرداخت‌های واقعی محاسبه کن
+            $update_data['paid_amount'] = $total_paid_real;
+            $update_data['remaining']   = max(0, $invoice->total - $total_paid_real);
+
+            // اگر remaining بعد از محاسبه صفر شد ولی ادمین sent انتخاب کرده، آن را نگه‌دار
+            // (ممکنه پرداخت‌های ثبت‌شده کامل باشن — در این حالت partial منطقی‌تر است)
+            if ($update_data['remaining'] <= 0 && $total_paid_real > 0) {
+                $update_data['status'] = 'paid';
+                $status = 'paid';
+            }
+        }
+
+        $wpdb->update($wpdb->prefix . 'emdad_invoices', $update_data, ['id' => $id]);
+
+        wp_send_json_success([
+            'new_status'       => $status,
+            'paid_amount'      => $update_data['paid_amount'] ?? $invoice->paid_amount,
+            'remaining'        => $update_data['remaining']   ?? $invoice->remaining,
+            'total_paid_real'  => $total_paid_real,
+        ]);
     }
 
     public function ajax_delete_invoice() {
@@ -309,6 +368,11 @@ class EmdadInvoice_Admin {
     }
 
     /* ──────────────────────── PAGES ──────────────────────── */
+
+    public function page_erp() {
+        $active_tab = sanitize_text_field($_GET['tab'] ?? 'invoices');
+        include EMDAD_INVOICE_DIR . 'views/admin-erp.php';
+    }
 
     public function page_invoices() {
         global $wpdb;

@@ -47,7 +47,6 @@ class emdadcamera_Setup_Setup {
         }
         wp_enqueue_script('swiper', wp_directory_uri . '/assets/js/swiper-bundle.min.js', array('jquery'), $version, true);
         wp_register_script('emdadcamera-lordicon', wp_directory_uri . '/assets/js/lordicon.js', array(), $version, true);
-        wp_enqueue_script('emdadcamera-lordicon');
         wp_register_script('emdadcamera-fancybox', wp_directory_uri . '/assets/js/fancybox.umd.js', array(), $version, true);
         wp_enqueue_script('emdadcamera-fancybox');
         wp_register_script('emdadcamera-inc', wp_directory_uri . '/assets/js/inc.js', array('jquery', 'swiper'), $version, true);

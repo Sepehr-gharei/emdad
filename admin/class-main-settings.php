@@ -42,6 +42,13 @@ class Main_Settings extends Admin_Helper {
                    
                 ],
             ],
+            'inquiry_info' => [
+                'menu' => 'تنظیمات استعلام',
+                'lable' => 'تنظیمات صفحه استعلام',
+                'settings' => [
+                    'warranty_url' => [ 'type' => 'text', 'title' => 'لینک سایت ضمانت‌نامه', 'value' => isset($theme_options['inquiry_info']['warranty_url']) ? $theme_options['inquiry_info']['warranty_url'] : '', 'width' => 'w100 ltr', ],
+                ],
+            ],
             'codes' => [
                 'menu' => 'کد های سفارشی',
                 'lable' => 'تنظیمات کد های سفارشی',

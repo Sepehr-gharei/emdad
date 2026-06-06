@@ -1,4 +1,4 @@
-@font-face{font-family:yekanbakh;src:url("assets/fonts/YekanBakh-VF.woff") format("woff2")}
+@font-face{font-family:yekanbakh;src:url("assets/fonts/YekanBakh-VF.woff") format("woff2");font-display: swap;}
 :root{--background-color:#fff;--font-primary-color:#111;--normal-white-color:#fff;--light-primary-color:#f0545e;--normal-primary-color:#e41522;--dark-primary-color:#a5111b;--normal-secondary-color:#f9f9f9;--dark-secondary-color:#f0f0f0;--green-color:#9ae6c5;--gold-color:#eebe00;--primary-transparent-1:rgba(215,26,32,.2);--primary-transparent-2:rgba(215,26,32,.5);--secondary-transparent-1:rgba(168,179,201,.2);--white-transparent-1:#fffffff5;--white-transparent-2:#ffffffee}
 *,*::before,*::after{box-sizing:border-box;padding:0;margin:0;border:0;outline:0;list-style:none;font-family:yekanbakh}
 html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}

@@ -8,7 +8,7 @@ $def_notes  = $settings['default_notes'] ?? '';
 ?>
 <div class="wrap">
     <h1><?php echo $is_edit ? '✏️ ویرایش فاکتور' : '➕ فاکتور جدید'; ?></h1>
-    <a href="<?php echo admin_url('admin.php?page=emdad-invoices'); ?>" class="button" style="margin:10px 0 20px;display:inline-block;">← برگشت به لیست</a>
+    <a href="<?php echo admin_url('admin.php?page=emdad-erp&tab=invoices'); ?>" class="button" style="margin:10px 0 20px;display:inline-block;">← برگشت به لیست</a>
 
     <form method="post" action="" id="emdad-invoice-form">
         <?php wp_nonce_field('emdad_save_invoice', 'emdad_nonce'); ?>
@@ -35,6 +35,68 @@ $def_notes  = $settings['default_notes'] ?? '';
                     <label>تاریخ سررسید</label>
                     <input type="text" name="due_date" data-jdp value="<?php echo $is_edit ? esc_attr($edit_invoice->due_date) : ''; ?>" placeholder="تاریخ شمسی (اختیاری)">
                 </div>
+                <?php if ($is_edit): ?>
+                <div class="emdad-field">
+                    <label>وضعیت پرداخت</label>
+                    <select name="invoice_status" style="font-weight:700;">
+                        <option value="draft"    <?php selected($edit_invoice->status, 'draft');    ?> style="color:#95a5a6;">📝 پیش‌نویس</option>
+                        <option value="sent"     <?php selected($edit_invoice->status, 'sent');     ?> style="color:#f59e0b;">📤 ارسال شده</option>
+                        <option value="partial"  <?php selected($edit_invoice->status, 'partial');  ?> style="color:#f97316;">💰 پرداخت ناقص</option>
+                        <option value="paid"     <?php selected($edit_invoice->status, 'paid');     ?> style="color:#22c55e;">✅ پرداخت شده</option>
+                        <option value="cancelled"<?php selected($edit_invoice->status, 'cancelled');?> style="color:#ef4444;">❌ لغو شده</option>
+                    </select>
+                </div>
+                <?php
+                // نمایش هشدار تاریخچه پرداخت در فرم ویرایش
+                global $wpdb;
+                $prev_payments = $wpdb->get_results($wpdb->prepare(
+                    "SELECT * FROM {$wpdb->prefix}emdad_invoice_payments WHERE invoice_id=%d AND status='success' ORDER BY paid_at DESC",
+                    $edit_invoice->id
+                ));
+                $currency = get_option('emdad_invoice_settings', [])['currency_label'] ?? 'تومان';
+                if (!empty($prev_payments)):
+                    $total_prev_paid = array_sum(array_column($prev_payments, 'amount'));
+                ?>
+                <div class="emdad-payment-history-notice" style="
+                    margin-top:10px;
+                    background:#fffbeb;
+                    border:1.5px solid #f59e0b;
+                    border-radius:10px;
+                    padding:12px 16px;
+                    direction:rtl;
+                    font-size:13px;
+                    color:#92400e;
+                ">
+                    <div style="font-weight:700;margin-bottom:8px;font-size:14px;">⚠️ این فاکتور سابقه پرداخت دارد</div>
+                    <div style="margin-bottom:6px;">
+                        مجموع پرداخت‌های ثبت‌شده: 
+                        <strong style="color:#b45309"><?php echo number_format($total_prev_paid); ?> <?php echo esc_html($currency); ?></strong>
+                    </div>
+                    <div style="border-top:1px solid #fcd34d;margin-top:8px;padding-top:8px;">
+                        <?php foreach ($prev_payments as $pp):
+                            $pd = function_exists('jdate') ? jdate('Y/m/d H:i', strtotime($pp->paid_at)) : date('Y/m/d H:i', strtotime($pp->paid_at));
+                            $method_map = ['cash'=>'نقدی','card'=>'کارت','online'=>'آنلاین','check'=>'چک','other'=>'سایر'];
+                            $method_label = $method_map[$pp->method] ?? $pp->method;
+                        ?>
+                        <div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:12px;">
+                            <span>📅 <?php echo esc_html($pd); ?></span>
+                            <span><?php echo esc_html($method_label); ?></span>
+                            <strong><?php echo number_format($pp->amount); ?> <?php echo esc_html($currency); ?></strong>
+                            <?php if ($pp->reference_code): ?>
+                            <span style="color:#78716c;">کد: <?php echo esc_html($pp->reference_code); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php if (in_array($edit_invoice->status, ['sent', 'draft'])): ?>
+                    <div style="margin-top:8px;padding-top:8px;border-top:1px solid #fcd34d;color:#78350f;font-size:12px;">
+                        💡 وضعیت به «<?php echo $edit_invoice->status === 'sent' ? 'ارسال شده' : 'پیش‌نویس'; ?>» تغییر کرده — مانده قابل پرداخت: 
+                        <strong><?php echo number_format(max(0, $edit_invoice->total - $total_prev_paid)); ?> <?php echo esc_html($currency); ?></strong>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -119,7 +181,7 @@ $def_notes  = $settings['default_notes'] ?? '';
                     <div class="item-inputs" style="grid-template-columns:90px 2fr 1fr 80px 1fr 90px 90px;">
                         <input type="text"   name="items[<?php echo $item_idx; ?>][product_code]"    placeholder="کد کالا"    value="<?php echo $item ? esc_attr($item->product_code ?? '') : ''; ?>">
                         <input type="text"   name="items[<?php echo $item_idx; ?>][name]"            placeholder="نام کالا یا خدمت" required value="<?php echo $item ? esc_attr($item->name) : ''; ?>">
-                        <input type="number" name="items[<?php echo $item_idx; ?>][quantity]"        placeholder="تعداد" value="<?php echo $item ? floatval($item->quantity) : 1; ?>" step="0.01" min="0" class="qty-input" oninput="calcTotal()">
+                        <input type="number" name="items[<?php echo $item_idx; ?>][quantity]"        placeholder="تعداد" value="<?php echo $item ? intval($item->quantity) : 1; ?>" step="1" min="1" class="qty-input" oninput="calcTotal()">
                         <select name="items[<?php echo $item_idx; ?>][unit]">
                             <?php foreach(['عدد','متر','کیلوگرم','ست','دستگاه','جفت','لیتر','ساعت','روز','ماه'] as $u): ?>
                             <option value="<?php echo esc_attr($u); ?>" <?php selected($item ? $item->unit : 'عدد', $u); ?>><?php echo esc_html($u); ?></option>
@@ -197,7 +259,7 @@ function addItem() {
         '<div class="item-inputs" style="grid-template-columns:90px 2fr 1fr 80px 1fr 90px 90px;">' +
             '<input type="text"   name="items[' + itemIndex + '][product_code]"    placeholder="کد کالا">' +
             '<input type="text"   name="items[' + itemIndex + '][name]"            placeholder="نام کالا یا خدمت" required>' +
-            '<input type="number" name="items[' + itemIndex + '][quantity]"        value="1" step="0.01" min="0" class="qty-input" oninput="calcTotal()">' +
+            '<input type="number" name="items[' + itemIndex + '][quantity]"        value="1" step="1" min="1" class="qty-input" oninput="calcTotal()">' +
             '<select name="items[' + itemIndex + '][unit]">' + <?php echo $optHtmlJson; ?> + '</select>' +
             '<input type="number" name="items[' + itemIndex + '][unit_price]"      placeholder="قیمت واحد" min="0" class="price-input" oninput="calcTotal()">' +
             '<input type="number" name="items[' + itemIndex + '][discount_percent]" placeholder="%" value="0" min="0" max="100" step="0.1" class="disc-input" oninput="calcTotal()">' +

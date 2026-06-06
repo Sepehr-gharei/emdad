@@ -9,6 +9,19 @@ class EmdadInvoice_Frontend {
         add_filter('query_vars', [$this, 'add_query_vars']);
         add_action('wp_ajax_emdad_pay_invoice', [$this, 'handle_pay_redirect']);
         add_action('wp_ajax_nopriv_emdad_pay_invoice', [$this, 'handle_pay_redirect']);
+        // اضافه کردن URL فاکتورها به لیست استثنا LiteSpeed
+        add_filter('litespeed_optimize_js_excludes', [$this, 'lscache_exclude']);
+        add_filter('litespeed_exc', [$this, 'lscache_exclude_uri']);
+    }
+
+    // استثنا کردن URL /faktur/ از LiteSpeed Cache
+    public function lscache_exclude($excludes) {
+        $excludes[] = 'faktur';
+        return $excludes;
+    }
+    public function lscache_exclude_uri($excludes) {
+        $excludes[] = '/faktur/';
+        return $excludes;
     }
 
     public function register_endpoints() {
@@ -44,6 +57,21 @@ class EmdadInvoice_Frontend {
         ));
 
         if (!$invoice) wp_die('<h2>فاکتور مورد نظر یافت نشد.</h2>', 'خطا', ['response' => 404]);
+
+        // ── جلوگیری از Cache شدن صفحه فاکتور توسط LiteSpeed و هر cache دیگری ──
+        // هر فاکتور یک tag یکتا دارد؛ بعد از پرداخت همین tag purge می‌شه
+        $cache_tag = 'emdad_invoice_' . $invoice->id;
+        do_action('litespeed_tag_add', $cache_tag);  // LiteSpeed: tag اضافه کن
+        do_action('litespeed_control_set_private', 'Invoice page - private per user'); // private cache
+        do_action('litespeed_control_set_nocache', 'Invoice page - no cache');         // اصلاً cache نکن
+
+        // Header مستقیم برای LiteSpeed Server (بدون نیاز به پلاگین)
+        if (!headers_sent()) {
+            header('X-LiteSpeed-Cache-Control: no-cache, no-store');
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
+        }
 
         $items    = EmdadInvoice_DB::get_invoice_items($invoice->id);
         $payments = EmdadInvoice_DB::get_invoice_payments($invoice->id);
